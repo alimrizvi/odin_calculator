@@ -30,7 +30,35 @@ const operate = function(num1,operator,num2) {
     else {return "Error"}
 }
 
-console.log(operate(4,'+',2))
-console.log(operate(4,'-',2))
-console.log(operate(4,'*',2))
-console.log(operate(4,'/',2))
+
+let createButtonsFromList = function(buttonList,buttonContainer) {
+    for (j=0;j<buttonList.length;j++) {
+        let tempButton = document.createElement('button')
+        tempButton.textContent = buttonList[j]
+        buttonContainer.appendChild(tempButton)
+    }
+}
+
+const expressionDisplayContainer = document.querySelector('#expression-display')
+const resultDisplayContainer = document.querySelector('#result-display')
+
+exprssionDisplay = document.createElement('span')
+resultDisplay = document.createElement('span')
+exprssionDisplay.textContent = '5+4'
+resultDisplay.textContent =  '9'
+expressionDisplayContainer.appendChild(exprssionDisplay)
+resultDisplayContainer.appendChild(resultDisplay)
+
+const arithimeticOperators = ['+','-','*','/','=']
+const specialOperators = ['AC','+/-','.']
+const numList = [0,1,2,3,4,5,6,7,8,9]
+const numberButtonsContainer = document.querySelector('#number-buttons')
+const arithimeticOperatorsButtonsContainer = document.querySelector('#arithemitc-operator-buttons')
+const specialOperatorsButtonsContainer = document.querySelector('#special-operator-buttons')
+
+createButtonsFromList(numList,numberButtonsContainer)
+createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer)
+createButtonsFromList(specialOperators,specialOperatorsButtonsContainer)
+
+
+

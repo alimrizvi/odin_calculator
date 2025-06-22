@@ -30,15 +30,29 @@ const operate = function(num1,operator,num2) {
     else {return "Error"}
 }
 
-
-let createButtonsFromList = function(buttonList,buttonContainer) {
+const createButtonsFromList = function(buttonList,buttonContainer,clickFunction) {
     for (j=0;j<buttonList.length;j++) {
         let tempButton = document.createElement('button')
         tempButton.textContent = buttonList[j]
+        tempButton.addEventListener('click',clickFunction)
         buttonContainer.appendChild(tempButton)
     }
 }
 
+const runSpecialOperation = function(e) {
+    const choice = e.target.textContent
+    console.log(choice)
+    if (choice =='AC') {
+        exprssionDisplay.textContent = ' '
+        resultDisplay.textContent = ' '
+    }
+}
+
+const addNumToExpression = function(e) {
+    choice = e.target.textContent
+    exprssionDisplay.textContent += choice
+}
+ 
 const expressionDisplayContainer = document.querySelector('#expression-display')
 const resultDisplayContainer = document.querySelector('#result-display')
 
@@ -49,16 +63,16 @@ resultDisplay.textContent =  '9'
 expressionDisplayContainer.appendChild(exprssionDisplay)
 resultDisplayContainer.appendChild(resultDisplay)
 
-const arithimeticOperators = ['+','-','*','/','=']
-const specialOperators = ['AC','+/-','.']
+const arithimeticOperators = ['+','-','*','/']
+const specialOperators = ['AC','=','+/-','.']
 const numList = [0,1,2,3,4,5,6,7,8,9]
 const numberButtonsContainer = document.querySelector('#number-buttons')
 const arithimeticOperatorsButtonsContainer = document.querySelector('#arithemitc-operator-buttons')
 const specialOperatorsButtonsContainer = document.querySelector('#special-operator-buttons')
 
-createButtonsFromList(numList,numberButtonsContainer)
-createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer)
-createButtonsFromList(specialOperators,specialOperatorsButtonsContainer)
+createButtonsFromList(numList,numberButtonsContainer,addNumToExpression)
+createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer,addNumToExpression)
+createButtonsFromList(specialOperators,specialOperatorsButtonsContainer,runSpecialOperation)
 
 
 

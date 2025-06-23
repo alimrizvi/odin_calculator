@@ -46,6 +46,7 @@ const createButtonsFromList = function(buttonList,buttonContainer,clickFunction)
 const clearScreen = function() {
     exprssionDisplay.textContent = ''
     resultDisplay.textContent = ''
+    lockScreen = false
 }
 
 const delineateExpressionArray = function(expressionArray,operator) {
@@ -117,6 +118,7 @@ const evaluateExpression = function() {
     }
     solved = solveExpression(expressionArray)
     if (solved) {resultDisplay.textContent = expressionArray[0]}
+    lockScreen = true
     // console.log(expressionArray)
 }
 
@@ -133,15 +135,30 @@ const runSpecialOperation = function(e) {
 }
 
 const addArthOperatorToExpression = function(e) {
-    let currentExpression = exprssionDisplay.textContent
-
+    // let currentExpression = exprssionDisplay.textContent
     choice = e.target.textContent
+    if (lockScreen) {
+        currentResult = resultDisplay.textContent
+        if (!(isNaN(currentResult))) {
+            console.log('result is number')
+            clearScreen()
+            exprssionDisplay.textContent = currentResult.toString() + choice
+            return true
+        }
+        else {
+            console.log('result is not number')
+            return true
+        }
+
+    }
     exprssionDisplay.textContent += choice
+
 }
 
 const addNumToExpression = function(e) {
     choice = e.target.textContent
-    exprssionDisplay.textContent += choice
+    if (!lockScreen) {exprssionDisplay.textContent += choice}
+    
 }
  
 const expressionDisplayContainer = document.querySelector('#expression-display')
@@ -158,6 +175,7 @@ const numList = [0,1,2,3,4,5,6,7,8,9]
 const numberButtonsContainer = document.querySelector('#number-buttons')
 const arithimeticOperatorsButtonsContainer = document.querySelector('#arithemitc-operator-buttons')
 const specialOperatorsButtonsContainer = document.querySelector('#special-operator-buttons')
+let lockScreen = false
 
 createButtonsFromList(numList,numberButtonsContainer,addNumToExpression)
 createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer,addArthOperatorToExpression)
@@ -169,7 +187,6 @@ createButtonsFromList(specialOperators,specialOperatorsButtonsContainer,runSpeci
 // Allow for only one decimal point to be added
 // Allow for the negative symbol button usage to toggle between positive and negative numbers
 // Make the UI for the calculator
-// Prevent Division by Zero
 // Round Answers with at long decimals at 8 decimal points
 // Can't push number buttons after result is display until result is clear
 // Can push arithemtic buttons after result is display. This should move answer to expression followed by operator and allow for new expression

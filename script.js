@@ -11,6 +11,9 @@ const multiply = function(num1,num2) {
 }
 
 const divide = function(num1,num2) {
+    if (+num2 == 0) {
+        return "Error: Can't divide by zero"
+    }
     return +num1 / +num2
 }
 
@@ -28,6 +31,7 @@ const operate = function(num1,operator,num2) {
         return divide(num1,num2)
     }
     else {return "Error"}
+
 }
 
 const createButtonsFromList = function(buttonList,buttonContainer,clickFunction) {
@@ -63,13 +67,17 @@ const delineateExpressionArray = function(expressionArray,operator) {
 const runArithemeticOperation = function(expressionArray,operator) {
     let operatorIndex = expressionArray.indexOf(operator)
     if (operatorIndex==-1) {
-        return false
+        return [false,false]
     }
     else {
         // console.log(expressionArray[operatorIndex-1],expressionArray[operatorIndex],expressionArray[operatorIndex+1])
         let answer = operate(expressionArray[operatorIndex-1],expressionArray[operatorIndex],expressionArray[operatorIndex+1])
+        if (!(typeof answer === 'number')) {
+            resultDisplay.textContent = answer
+            return [false,true]
+        }
         expressionArray.splice(operatorIndex-1,3,answer)
-        return true
+        return [true,false]
     }
 }
 
@@ -79,17 +87,24 @@ const solveExpression = function(expressionArray) {
         return true
     }
     else {
+        let suspend = false
         for (let i=0;i<arithimeticOperators.length;i++) {
             let operator = arithimeticOperators[i]
             let operationRequired = true
+            
             while (operationRequired) {
-                operationRequired = runArithemeticOperation(expressionArray,operator)
+                operationResult = runArithemeticOperation(expressionArray,operator)
+                operationRequired = operationResult[0]
+                suspend = operationResult[1]
+                if (suspend) {
+                    console.log('suspended')
+                    return false}
             }
             
         }
         solveExpression(expressionArray)
     }
-        
+    return true
     // console.log(expressionArray)
 }
 
@@ -100,8 +115,8 @@ const evaluateExpression = function() {
         // console.log(operator)
         expressionArray = delineateExpressionArray(expressionArray,operator)
     }
-    solveExpression(expressionArray)
-    resultDisplay.textContent = expressionArray[0]
+    solved = solveExpression(expressionArray)
+    if (solved) {resultDisplay.textContent = expressionArray[0]}
     // console.log(expressionArray)
 }
 
@@ -115,6 +130,13 @@ const runSpecialOperation = function(e) {
     else if (choice =='=') {
         evaluateExpression()
     }
+}
+
+const addArthOperatorToExpression = function(e) {
+    let currentExpression = exprssionDisplay.textContent
+
+    choice = e.target.textContent
+    exprssionDisplay.textContent += choice
 }
 
 const addNumToExpression = function(e) {
@@ -138,8 +160,18 @@ const arithimeticOperatorsButtonsContainer = document.querySelector('#arithemitc
 const specialOperatorsButtonsContainer = document.querySelector('#special-operator-buttons')
 
 createButtonsFromList(numList,numberButtonsContainer,addNumToExpression)
-createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer,addNumToExpression)
+createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer,addArthOperatorToExpression)
 createButtonsFromList(specialOperators,specialOperatorsButtonsContainer,runSpecialOperation)
 
 
-
+// ignore the trailing operators at the end of expression when not closed by a number
+// Prevent double adding of operators in the expression
+// Allow for only one decimal point to be added
+// Allow for the negative symbol button usage to toggle between positive and negative numbers
+// Make the UI for the calculator
+// Prevent Division by Zero
+// Round Answers with at long decimals at 8 decimal points
+// Can't push number buttons after result is display until result is clear
+// Can push arithemtic buttons after result is display. This should move answer to expression followed by operator and allow for new expression
+// Backspace button
+// Keyboard support

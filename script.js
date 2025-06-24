@@ -135,23 +135,29 @@ const runSpecialOperation = function(e) {
 }
 
 const addArthOperatorToExpression = function(e) {
-    // let currentExpression = exprssionDisplay.textContent
+    let currentExpression = exprssionDisplay.textContent
+    
+    console.log(currentExpression.slice(-1))
     choice = e.target.textContent
     if (lockScreen) {
         currentResult = resultDisplay.textContent
         if (!(isNaN(currentResult))) {
-            console.log('result is number')
             clearScreen()
             exprssionDisplay.textContent = currentResult.toString() + choice
             return true
         }
         else {
-            console.log('result is not number')
             return true
         }
 
     }
-    exprssionDisplay.textContent += choice
+    if (currentExpression.length > 0 & arithimeticOperators.includes(currentExpression.slice(-1))) {
+        exprssionDisplay.textContent = currentExpression.slice(0,-1) + choice
+        return true
+    }
+    else {
+        exprssionDisplay.textContent += choice
+    }
 
 }
 
@@ -183,12 +189,9 @@ createButtonsFromList(specialOperators,specialOperatorsButtonsContainer,runSpeci
 
 
 // ignore the trailing operators at the end of expression when not closed by a number
-// Prevent double adding of operators in the expression
 // Allow for only one decimal point to be added
 // Allow for the negative symbol button usage to toggle between positive and negative numbers
-// Make the UI for the calculator
 // Round Answers with at long decimals at 8 decimal points
-// Can't push number buttons after result is display until result is clear
-// Can push arithemtic buttons after result is display. This should move answer to expression followed by operator and allow for new expression
+// Make the UI for the calculator
 // Backspace button
 // Keyboard support

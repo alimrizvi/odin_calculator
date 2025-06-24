@@ -110,7 +110,11 @@ const solveExpression = function(expressionArray) {
 }
 
 const evaluateExpression = function() {
-    let expressionArray = new Array(exprssionDisplay.textContent)
+    let currentExpression = exprssionDisplay.textContent
+    if (arithimeticOperators.includes(currentExpression.slice(-1))) {
+        deleteLastCharacter()
+    }
+    let expressionArray = new Array(currentExpression)
     for (let i=0;i<arithimeticOperators.length;i++) {
         operator = arithimeticOperators[i]
         // console.log(operator)
@@ -122,6 +126,10 @@ const evaluateExpression = function() {
     // console.log(expressionArray)
 }
 
+const deleteLastCharacter = function() {
+    let currentExpression = exprssionDisplay.textContent
+    exprssionDisplay.textContent = currentExpression.slice(0,-1)
+}
 
 
 const runSpecialOperation = function(e) {
@@ -132,12 +140,13 @@ const runSpecialOperation = function(e) {
     else if (choice =='=') {
         evaluateExpression()
     }
+    else if (choice =='⌫') {
+        deleteLastCharacter()
+    }
 }
 
 const addArthOperatorToExpression = function(e) {
     let currentExpression = exprssionDisplay.textContent
-    
-    console.log(currentExpression.slice(-1))
     choice = e.target.textContent
     if (lockScreen) {
         currentResult = resultDisplay.textContent
@@ -152,12 +161,9 @@ const addArthOperatorToExpression = function(e) {
 
     }
     if (currentExpression.length > 0 & arithimeticOperators.includes(currentExpression.slice(-1))) {
-        exprssionDisplay.textContent = currentExpression.slice(0,-1) + choice
-        return true
+        deleteLastCharacter()
     }
-    else {
-        exprssionDisplay.textContent += choice
-    }
+    exprssionDisplay.textContent += choice
 
 }
 
@@ -176,7 +182,7 @@ expressionDisplayContainer.appendChild(exprssionDisplay)
 resultDisplayContainer.appendChild(resultDisplay)
 
 const arithimeticOperators = ['/','*','+','-']
-const specialOperators = ['AC','=','+/-','.']
+const specialOperators = ['AC','=','+/-','.','⌫']
 const numList = [0,1,2,3,4,5,6,7,8,9]
 const numberButtonsContainer = document.querySelector('#number-buttons')
 const arithimeticOperatorsButtonsContainer = document.querySelector('#arithemitc-operator-buttons')
@@ -188,10 +194,8 @@ createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer,
 createButtonsFromList(specialOperators,specialOperatorsButtonsContainer,runSpecialOperation)
 
 
-// ignore the trailing operators at the end of expression when not closed by a number
 // Allow for only one decimal point to be added
 // Allow for the negative symbol button usage to toggle between positive and negative numbers
-// Round Answers with at long decimals at 8 decimal points
+// Round Answers with long decimals at 8 decimal points
 // Make the UI for the calculator
-// Backspace button
 // Keyboard support

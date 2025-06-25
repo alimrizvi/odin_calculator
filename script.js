@@ -90,7 +90,6 @@ const delineateExpressionArray = function(expressionArray,operator) {
         }
         resultArray.push(splitArray)
     }
-    // console.log(resultArray)
     return resultArray.flat()
 }
 
@@ -100,7 +99,6 @@ const runArithemeticOperation = function(expressionArray,operator) {
         return [false,false]
     }
     else {
-        // console.log(expressionArray[operatorIndex-1],expressionArray[operatorIndex],expressionArray[operatorIndex+1])
         let answer = operate(expressionArray[operatorIndex-1],expressionArray[operatorIndex],expressionArray[operatorIndex+1])
         if (!(typeof answer === 'number')) {
             resultDisplay.textContent = answer
@@ -112,7 +110,6 @@ const runArithemeticOperation = function(expressionArray,operator) {
 }
 
 const solveExpression = function(expressionArray) {
-    // console.log(expressionArray)
     if (expressionArray.length==1) {
         return true
     }
@@ -127,7 +124,6 @@ const solveExpression = function(expressionArray) {
                 operationRequired = operationResult[0]
                 suspend = operationResult[1]
                 if (suspend) {
-                    console.log('suspended')
                     return false}
             }
             
@@ -135,7 +131,6 @@ const solveExpression = function(expressionArray) {
         solveExpression(expressionArray)
     }
     return true
-    // console.log(expressionArray)
 }
 
 const evaluateExpression = function() {
@@ -146,15 +141,12 @@ const evaluateExpression = function() {
     let expressionArray = new Array(currentExpression)
     for (let i=0;i<arithimeticOperators.length;i++) {
         operator = arithimeticOperators[i]
-        // console.log(operator)
         expressionArray = delineateExpressionArray(expressionArray,operator)
     }
-    console.log(expressionArray)
     fixHoles(expressionArray)
     solved = solveExpression(expressionArray)
     if (solved) {resultDisplay.textContent = expressionArray[0]}
     lockScreen = true
-    // console.log(expressionArray)
 }
 
 const deleteLastCharacter = function() {
@@ -290,7 +282,6 @@ createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer,
 createButtonsFromList(specialOperators,specialOperatorsButtonsContainer,runSpecialOperation)
 
 
-// Round Answers with long decimals at 8 decimal points
 // Make the UI for the calculator
 // Keyboard support
 

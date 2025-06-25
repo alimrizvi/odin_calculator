@@ -19,19 +19,36 @@ const divide = function(num1,num2) {
 
 const operate = function(num1,operator,num2) {
     if (operator=='+') {
-        return add(num1,num2)
+        return checkDecimalPlaces(add(num1,num2))
     }
     else if (operator=='-') {
-        return subtract(num1,num2)
+        return checkDecimalPlaces(subtract(num1,num2))
     }
     else if (operator=='*') {
-        return multiply(num1,num2)
+        return checkDecimalPlaces(multiply(num1,num2))
     }
     else if (operator=='/') {
-        return divide(num1,num2)
+        return checkDecimalPlaces(divide(num1,num2))
     }
     else {return "Error"}
 
+}
+
+const checkDecimalPlaces = function(num) {
+    const numStr = num.toString()
+    const decimalIndex = numStr.indexOf('.')
+    if (decimalIndex== -1 ) {
+        return num
+    }
+    else {
+        decimalPlaces = numStr.length - decimalIndex + 1
+        if (decimalPlaces <= 8) {
+            return num
+            }
+        else {
+            return Math.round(num * 100000000) / 100000000
+        }
+    }
 }
 
 const createButtonsFromList = function(buttonList,buttonContainer,clickFunction) {
@@ -273,15 +290,7 @@ createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer,
 createButtonsFromList(specialOperators,specialOperatorsButtonsContainer,runSpecialOperation)
 
 
-// Allow for the negative symbol button usage to toggle between positive and negative numbers
 // Round Answers with long decimals at 8 decimal points
 // Make the UI for the calculator
 // Keyboard support
 
-// const test_array = ['9', '/', '', '-', '3','*','','-','5']
-
-
-
-// fixHoles(test_array)
-
-// console.log(test_array)

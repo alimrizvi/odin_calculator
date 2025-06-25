@@ -44,7 +44,7 @@ const createButtonsFromList = function(buttonList,buttonContainer,clickFunction)
 }
 
 const clearScreen = function() {
-    exprssionDisplay.textContent = ''
+    expressionDisplay.textContent = ''
     resultDisplay.textContent = ''
     lockScreen = false
 }
@@ -110,7 +110,7 @@ const solveExpression = function(expressionArray) {
 }
 
 const evaluateExpression = function() {
-    let currentExpression = exprssionDisplay.textContent
+    let currentExpression = expressionDisplay.textContent
     if (arithimeticOperators.includes(currentExpression.slice(-1))) {
         deleteLastCharacter()
     }
@@ -127,10 +127,72 @@ const evaluateExpression = function() {
 }
 
 const deleteLastCharacter = function() {
-    let currentExpression = exprssionDisplay.textContent
-    exprssionDisplay.textContent = currentExpression.slice(0,-1)
+    let currentExpression = expressionDisplay.textContent
+    expressionDisplay.textContent = currentExpression.slice(0,-1)
 }
 
+
+const addArthOperatorToExpression = function(e) {
+    let currentExpression = expressionDisplay.textContent
+    choice = e.target.textContent
+    if (lockScreen) {
+        currentResult = resultDisplay.textContent
+        if (!(isNaN(currentResult))) {
+            clearScreen()
+            expressionDisplay.textContent = currentResult.toString() + choice
+            return true
+        }
+        else {
+            return true
+        }
+
+    }
+    if (currentExpression.length > 0 & arithimeticOperators.includes(currentExpression.slice(-1))) {
+        deleteLastCharacter()
+    }
+    expressionDisplay.textContent += choice
+}
+
+const testIfDecimalExists = function(test_str) {
+    let operatorIndex = -1
+    for (let i=test_str.length-1;i>=0;i--) {
+        
+        if (arithimeticOperators.includes(test_str[i])) {
+            operatorIndex = i
+            break;
+        }
+    }
+    last_term  = test_str.slice(operatorIndex+1)
+
+    return last_term.includes('.')
+
+}
+
+const addDecimalPoint = function() {
+    let currentExpression = expressionDisplay.textContent
+    if (!lockScreen) {
+        if (currentExpression.length == 0) {
+            expressionDisplay.textContent = '0.'
+            return true
+        }
+        else if (arithimeticOperators.includes(currentExpression.slice(-1))) {
+            expressionDisplay.textContent += '0.'
+        }
+        else if (testIfDecimalExists(currentExpression)) {
+            return true
+        }
+        else {
+            expressionDisplay.textContent += '.'
+        }
+
+    }
+}
+
+const addNumToExpression = function(e) {
+    choice = e.target.textContent
+    if (!lockScreen) {expressionDisplay.textContent += choice}
+    
+}
 
 const runSpecialOperation = function(e) {
     const choice = e.target.textContent
@@ -143,42 +205,17 @@ const runSpecialOperation = function(e) {
     else if (choice =='⌫') {
         deleteLastCharacter()
     }
-}
-
-const addArthOperatorToExpression = function(e) {
-    let currentExpression = exprssionDisplay.textContent
-    choice = e.target.textContent
-    if (lockScreen) {
-        currentResult = resultDisplay.textContent
-        if (!(isNaN(currentResult))) {
-            clearScreen()
-            exprssionDisplay.textContent = currentResult.toString() + choice
-            return true
-        }
-        else {
-            return true
-        }
-
+    else if (choice == '.') {
+        addDecimalPoint()
     }
-    if (currentExpression.length > 0 & arithimeticOperators.includes(currentExpression.slice(-1))) {
-        deleteLastCharacter()
-    }
-    exprssionDisplay.textContent += choice
-
-}
-
-const addNumToExpression = function(e) {
-    choice = e.target.textContent
-    if (!lockScreen) {exprssionDisplay.textContent += choice}
-    
 }
  
 const expressionDisplayContainer = document.querySelector('#expression-display')
 const resultDisplayContainer = document.querySelector('#result-display')
 
-exprssionDisplay = document.createElement('span')
+expressionDisplay = document.createElement('span')
 resultDisplay = document.createElement('span')
-expressionDisplayContainer.appendChild(exprssionDisplay)
+expressionDisplayContainer.appendChild(expressionDisplay)
 resultDisplayContainer.appendChild(resultDisplay)
 
 const arithimeticOperators = ['/','*','+','-']
@@ -194,8 +231,16 @@ createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer,
 createButtonsFromList(specialOperators,specialOperatorsButtonsContainer,runSpecialOperation)
 
 
-// Allow for only one decimal point to be added
 // Allow for the negative symbol button usage to toggle between positive and negative numbers
 // Round Answers with long decimals at 8 decimal points
 // Make the UI for the calculator
 // Keyboard support
+
+
+test_str_decimal = '56+43+98-98.8'
+test_str_clean = '56+43+98-98'
+
+
+
+
+testIfDecimalExists(test_str_clean)

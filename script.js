@@ -49,6 +49,17 @@ const clearScreen = function() {
     lockScreen = false
 }
 
+const fixHoles = function(array) {
+    if (array.indexOf('') == -1) {
+        return array
+    }
+    let holeIndex = array.indexOf('')
+    let nextNum = array[holeIndex+2]
+    array.splice(holeIndex,3,nextNum,'*','-1')
+    fixHoles(array)
+    
+}
+
 const delineateExpressionArray = function(expressionArray,operator) {
     let resultArray = []
     for (let n=0;n<expressionArray.length;n++) {
@@ -62,6 +73,7 @@ const delineateExpressionArray = function(expressionArray,operator) {
         }
         resultArray.push(splitArray)
     }
+    // console.log(resultArray)
     return resultArray.flat()
 }
 
@@ -120,6 +132,8 @@ const evaluateExpression = function() {
         // console.log(operator)
         expressionArray = delineateExpressionArray(expressionArray,operator)
     }
+    console.log(expressionArray)
+    fixHoles(expressionArray)
     solved = solveExpression(expressionArray)
     if (solved) {resultDisplay.textContent = expressionArray[0]}
     lockScreen = true
@@ -130,6 +144,7 @@ const deleteLastCharacter = function() {
     let currentExpression = expressionDisplay.textContent
     expressionDisplay.textContent = currentExpression.slice(0,-1)
 }
+
 
 
 const addArthOperatorToExpression = function(e) {
@@ -150,10 +165,13 @@ const addArthOperatorToExpression = function(e) {
     if (currentExpression.length > 0 & arithimeticOperators.includes(currentExpression.slice(-1))) {
         deleteLastCharacter()
     }
+    else if (currentExpression.length == 0) {
+        return true
+    }
     expressionDisplay.textContent += choice
 }
 
-const testIfDecimalExists = function(test_str) {
+const findLastTerm = function (test_str) {
     let operatorIndex = -1
     for (let i=test_str.length-1;i>=0;i--) {
         
@@ -162,9 +180,14 @@ const testIfDecimalExists = function(test_str) {
             break;
         }
     }
-    last_term  = test_str.slice(operatorIndex+1)
+    lastTerm  = test_str.slice(operatorIndex+1)
+    return lastTerm
+}
 
-    return last_term.includes('.')
+const testIfDecimalExists = function(test_str) {
+    lastTerm = findLastTerm(test_str)
+
+    return lastTerm.includes('.')
 
 }
 
@@ -188,6 +211,20 @@ const addDecimalPoint = function() {
     }
 }
 
+const runNegativeOperator = function() {
+    let currentExpression = expressionDisplay.textContent
+    let lastTerm = findLastTerm(currentExpression)
+    lastTermIndex = currentExpression.lastIndexOf(lastTerm)
+    prevTerms = currentExpression.slice(0,lastTermIndex)
+    
+    if (prevTerms.slice(-1) == '-' &  (prevTerms.length == 1 | arithimeticOperators.includes(prevTerms.slice(-2,-1)))) {
+        expressionDisplay.textContent = prevTerms.slice(0,-1) + lastTerm
+    }
+    else {
+        expressionDisplay.textContent = prevTerms + '-' + lastTerm
+    }
+}
+
 const addNumToExpression = function(e) {
     choice = e.target.textContent
     if (!lockScreen) {expressionDisplay.textContent += choice}
@@ -208,6 +245,10 @@ const runSpecialOperation = function(e) {
     else if (choice == '.') {
         addDecimalPoint()
     }
+    else if (choice == '+/-') {
+        runNegativeOperator()
+    }
+
 }
  
 const expressionDisplayContainer = document.querySelector('#expression-display')
@@ -225,6 +266,7 @@ const numberButtonsContainer = document.querySelector('#number-buttons')
 const arithimeticOperatorsButtonsContainer = document.querySelector('#arithemitc-operator-buttons')
 const specialOperatorsButtonsContainer = document.querySelector('#special-operator-buttons')
 let lockScreen = false
+let negativeTerm  = false
 
 createButtonsFromList(numList,numberButtonsContainer,addNumToExpression)
 createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer,addArthOperatorToExpression)
@@ -236,11 +278,10 @@ createButtonsFromList(specialOperators,specialOperatorsButtonsContainer,runSpeci
 // Make the UI for the calculator
 // Keyboard support
 
-
-test_str_decimal = '56+43+98-98.8'
-test_str_clean = '56+43+98-98'
+// const test_array = ['9', '/', '', '-', '3','*','','-','5']
 
 
 
+// fixHoles(test_array)
 
-testIfDecimalExists(test_str_clean)
+// console.log(test_array)

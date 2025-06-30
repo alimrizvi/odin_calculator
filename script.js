@@ -310,9 +310,10 @@ let lockScreen = false
 const additionalKeyMappings = [
     {'key':'*','mapTo':'x'},
     {'key':'/','mapTo':'÷'},
-    {'key':'Backspace','mapTo':'AC'},
+    {'key':'Backspace','mapTo':'⌫'},
     {'key':'Enter','mapTo':'='},
     {'key':'_','mapTo':'+/-'},
+    {'key':'Escape','mapTo':'AC'},
 ]
 
 createButtonsFromList(numList,addNumToExpression)

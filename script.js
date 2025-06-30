@@ -24,10 +24,10 @@ const operate = function(num1,operator,num2) {
     else if (operator=='-') {
         return checkDecimalPlaces(subtract(num1,num2))
     }
-    else if (operator=='*') {
+    else if (operator=='x') {
         return checkDecimalPlaces(multiply(num1,num2))
     }
-    else if (operator=='/') {
+    else if (operator=='÷') {
         return checkDecimalPlaces(divide(num1,num2))
     }
     else {return "Error"}
@@ -51,12 +51,14 @@ const checkDecimalPlaces = function(num) {
     }
 }
 
-const createButtonsFromList = function(buttonList,buttonContainer,clickFunction) {
+const createButtonsFromList = function(buttonList,clickFunction) {
     for (j=0;j<buttonList.length;j++) {
         let tempButton = document.createElement('button')
-        tempButton.textContent = buttonList[j]
+        let buttonText = buttonList[j]
+        tempButton.textContent = buttonText
         tempButton.addEventListener('click',clickFunction)
-        buttonContainer.appendChild(tempButton)
+        const buttonObject = {[buttonText]:tempButton}
+        buttonObjectList.push(buttonObject)
     }
 }
 
@@ -259,29 +261,47 @@ const runSpecialOperation = function(e) {
     }
 
 }
+
+const placeButtons = function(mapLists,buttonObjectList) {
+    for (const map of mapLists ) {
+        for (let element of map['list']) {
+            let obj = buttonObjectList.find(x => element in x)
+            tempButton = obj[element]
+            map['container'].appendChild(tempButton)
+        }
+    }
+}
  
 const expressionDisplayContainer = document.querySelector('#expression-display')
 const resultDisplayContainer = document.querySelector('#result-display')
 
-expressionDisplay = document.createElement('span')
-resultDisplay = document.createElement('span')
+const expressionDisplay = document.createElement('span')
+const resultDisplay = document.createElement('span')
 expressionDisplayContainer.appendChild(expressionDisplay)
 resultDisplayContainer.appendChild(resultDisplay)
 
-const arithimeticOperators = ['/','*','+','-']
+const buttonObjectList = []
+const arithimeticOperators = ['÷','x','+','-']
 const specialOperators = ['AC','=','+/-','.','⌫']
 const numList = [0,1,2,3,4,5,6,7,8,9]
-const numberButtonsContainer = document.querySelector('#number-buttons')
-const arithimeticOperatorsButtonsContainer = document.querySelector('#arithemitc-operator-buttons')
-const specialOperatorsButtonsContainer = document.querySelector('#special-operator-buttons')
+
+const topLeftContainer = document.querySelector('#top-left')
+const midLeftContainer = document.querySelector('#mid-left')
+const bottomLeftContainer = document.querySelector('#bottom-left')
+const rightColContainer = document.querySelector('#right-col')
+const mapLists = [
+    {'container':midLeftContainer,'list':[7,8,9,4,5,6,1,2,3]},
+    {'container':bottomLeftContainer,'list':['+/-',0,'.']},
+    {'container':topLeftContainer,'list':['AC','⌫']},
+    {'container':rightColContainer,'list':['÷','x','+','-','=']},
+    ]
 let lockScreen = false
-let negativeTerm  = false
 
-createButtonsFromList(numList,numberButtonsContainer,addNumToExpression)
-createButtonsFromList(arithimeticOperators,arithimeticOperatorsButtonsContainer,addArthOperatorToExpression)
-createButtonsFromList(specialOperators,specialOperatorsButtonsContainer,runSpecialOperation)
+createButtonsFromList(numList,addNumToExpression)
+createButtonsFromList(arithimeticOperators,addArthOperatorToExpression)
+createButtonsFromList(specialOperators,runSpecialOperation)
+placeButtons(mapLists,buttonObjectList)
 
 
-// Make the UI for the calculator
 // Keyboard support
 

@@ -271,6 +271,17 @@ const placeButtons = function(mapLists,buttonObjectList) {
         }
     }
 }
+
+const mapAdditionalKeys = function(additionalKeyMappings) {
+    for (const keyMap of additionalKeyMappings) {
+        const newKey = keyMap['key']
+        const mapsTo = keyMap['mapTo']
+        let obj = buttonObjectList.find(x => mapsTo in x)
+        const tempButton = obj[mapsTo]
+        const newButtonObject = {[newKey]:tempButton}
+        buttonObjectList.push(newButtonObject)
+    }
+}
  
 const expressionDisplayContainer = document.querySelector('#expression-display')
 const resultDisplayContainer = document.querySelector('#result-display')
@@ -296,12 +307,22 @@ const mapLists = [
     {'container':rightColContainer,'list':['÷','x','+','-','=']},
     ]
 let lockScreen = false
+const additionalKeyMappings = [
+    {'key':'*','mapTo':'x'},
+    {'key':'/','mapTo':'÷'},
+    {'key':'Backspace','mapTo':'AC'},
+    {'key':'Enter','mapTo':'='},
+    {'key':'_','mapTo':'+/-'},
+]
 
 createButtonsFromList(numList,addNumToExpression)
 createButtonsFromList(arithimeticOperators,addArthOperatorToExpression)
 createButtonsFromList(specialOperators,runSpecialOperation)
 placeButtons(mapLists,buttonObjectList)
+mapAdditionalKeys(additionalKeyMappings)
 
-
-// Keyboard support
-
+document.addEventListener("keydown", function(event) {
+    let obj = buttonObjectList.find(x => event.key in x)
+        obj[event.key].click()
+    }
+)

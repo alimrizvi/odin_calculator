@@ -74,7 +74,7 @@ const fixHoles = function(array) {
     }
     let holeIndex = array.indexOf('')
     let nextNum = array[holeIndex+2]
-    array.splice(holeIndex,3,nextNum,'*','-1')
+    array.splice(holeIndex,3,nextNum,'x','-1')
     fixHoles(array)
     
 }

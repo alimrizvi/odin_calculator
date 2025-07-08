@@ -139,6 +139,7 @@ const evaluateExpression = function() {
     let currentExpression = expressionDisplay.textContent
     if (arithimeticOperators.includes(currentExpression.slice(-1))) {
         deleteLastCharacter()
+        currentExpression = expressionDisplay.textContent
     }
     let expressionArray = new Array(currentExpression)
     for (let i=0;i<arithimeticOperators.length;i++) {
